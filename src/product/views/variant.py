@@ -18,6 +18,7 @@ class VariantView(BaseVariantView, ListView):
 
     def get_queryset(self):
         filter_string = {}
+        print("in varient")
         print(self.request.GET)
         for key in self.request.GET:
             if self.request.GET.get(key):

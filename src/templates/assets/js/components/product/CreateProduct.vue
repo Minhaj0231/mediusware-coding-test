@@ -101,6 +101,8 @@ import vue2Dropzone from 'vue2-dropzone'
 import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 import InputTag from 'vue-input-tag'
 
+import axios from 'axios'
+
 export default {
   components: {
     vueDropzone: vue2Dropzone,
@@ -177,19 +179,32 @@ export default {
       return ans;
     },
 
+    // get cookie values
+   getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  },
+
+
     // store product into database
     saveProduct() {
       let product = {
         title: this.product_name,
         sku: this.product_sku,
         description: this.description,
-        product_image: this.images,
         product_variant: this.product_variant,
         product_variant_prices: this.product_variant_prices
       }
 
-
-      axios.post('/product', product).then(response => {
+  
+      axios({
+                method : "POST",
+                url:'/product/create/', 
+                headers: {'X-CSRFTOKEN': this.getCookie("csrftoken"), 'Content-Type': 'application/json' },
+                data : product ,//data
+              }).
+      then(response => {
         console.log(response.data);
       }).catch(error => {
         console.log(error);
